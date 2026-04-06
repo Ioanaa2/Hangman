@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\bunny.jpg" />
+    <None Remove="Images\bunny.png" />
+    <None Remove="Images\ladybug.jpg" />
+    <None Remove="Images\ladybug.png" />
+    <None Remove="Images\owl.png" />
+    <None Remove="Images\owljpg.jpg" />
+    <None Remove="Images\panda.jpg" />
+    <None Remove="Images\panda.png" />
+    <None Remove="Images\reindeer.jpg" />
+    <None Remove="Images\reindeer.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Images\bunny.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ladybug.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\owl.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\panda.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\reindeer.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
