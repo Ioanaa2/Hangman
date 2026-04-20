@@ -1,0 +1,18 @@
+﻿<Window x:Class="tema2MAP.CreateUser"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:tema2MAP"
+        mc:Ignorable="d"
+        Title="CreateUser" Height="345" Width="585">
+    <Grid Margin="0,0,-5,-1">
+        <Label Content="Username" HorizontalAlignment="Left" Height="40" Margin="90,64,0,0" VerticalAlignment="Top" Width="115"/>
+        <Label Content="Image index" HorizontalAlignment="Left" Margin="100,189,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="Username" HorizontalAlignment="Left" Margin="255,74,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="IndexImage" HorizontalAlignment="Left" Margin="250,201,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Button Content="OK" HorizontalAlignment="Left" Margin="125,259,0,0" VerticalAlignment="Top" Click="ButtonOK_Click"/>
+
+
+    </Grid>
+</Window>
