@@ -1,0 +1,14 @@
+﻿<Window x:Class="tema2MAP.StatisticsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Statistici Utilizatori" Height="300" Width="450">
+    <Grid Margin="10">
+        <DataGrid x:Name="StatsGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Utilizator" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Jocuri Jucate" Binding="{Binding GamesPlayed}" Width="100"/>
+                <DataGridTextColumn Header="Jocuri Câștigate" Binding="{Binding GamesWon}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

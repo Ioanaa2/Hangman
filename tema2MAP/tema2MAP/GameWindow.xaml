@@ -17,6 +17,10 @@
             <MenuItem Header="File">
                 <MenuItem Header="New Game"
                           Command="{Binding NewGameCommand}"/>
+
+                <MenuItem Header="Save Game" Click="OpenStatistics_Click"/>
+                <MenuItem Header="Open Game" Click="OpenStatistics_Click"/>
+                <MenuItem Header="Statistics" Click="OpenStatistics_Click"/>
             </MenuItem>
 
             <MenuItem Header="Categories">

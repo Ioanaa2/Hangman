@@ -32,5 +32,10 @@ namespace tema2MAP
                 }
             }
         }
+        private void OpenStatistics_Click(object sender, RoutedEventArgs e)
+        {
+            StatisticsWindow statsWin = new StatisticsWindow();
+            statsWin.ShowDialog();
+        }
     }
 }
