@@ -6,9 +6,99 @@
         xmlns:local="clr-namespace:tema2MAP"
         mc:Ignorable="d"
         Title="GameWindow" Height="450" Width="800">
-    <Grid Background="#f7faf0">
-        <Image x:Name="HangMan" HorizontalAlignment="Left" Height="340" Margin="40,44,0,0" VerticalAlignment="Top" Width="250"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+        <Menu Grid.Row="0" Background="White">
+            <MenuItem Header="File">
+                <MenuItem Header="New Game" />
+                <MenuItem Header="Open Game" />
+                <MenuItem Header="Save Game" />
+                <MenuItem Header="Statistics" />
+            </MenuItem>
+            <MenuItem Header="Categories">
+                <MenuItem Header="All categories" IsCheckable="True" Click="Category_Click"/>
+                <MenuItem Header="Cars" IsCheckable="True" Click="Category_Click"/>
+                <MenuItem Header="Movies" IsCheckable="True" IsChecked="True" Click="Category_Click"/>
+                <MenuItem Header="States" IsCheckable="True" Click="Category_Click"/>
+                <MenuItem Header="Mountains" IsCheckable="True" Click="Category_Click"/>
+                <MenuItem Header="Rivers" IsCheckable="True" Click="Category_Click"/>
+            </MenuItem>
+            <MenuItem Header="Help" />
+        </Menu>
 
+        <Grid Grid.Row="1" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="{Binding PlayerName}"
+                   FontSize="26"
+                   FontWeight="Bold"/>
+                <TextBlock Text="Level 1" FontSize="18" FontWeight="Bold" Margin="0,0,0,15"/>
+
+                <Border Background="White" BorderBrush="Black" BorderThickness="3" Height="220">
+                    <Canvas>
+                        <Line X1="20" Y1="200" X2="180" Y2="200" Stroke="Black" StrokeThickness="4" />
+                        <Line X1="50" Y1="200" X2="50" Y2="20" Stroke="Black" StrokeThickness="4" />
+                        <Line X1="50" Y1="20" X2="130" Y2="20" Stroke="Black" StrokeThickness="4" />
+                        <Line X1="130" Y1="20" X2="130" Y2="50" Stroke="Black" StrokeThickness="2" />
+                    </Canvas>
+                </Border>
+
+                <TextBlock Text="Movies:  _ _ _ _ _ _" FontSize="24" FontWeight="Bold" Margin="0,30,0,0"/>
+            </StackPanel>
+
+            <Grid Grid.Column="1" Margin="30,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,40">
+                    <Border Width="45" Height="45" Background="LightGray" BorderBrush="Gray" BorderThickness="1" Margin="5" CornerRadius="5"/>
+                    <Border Width="45" Height="45" Background="LightGray" BorderBrush="Gray" BorderThickness="1" Margin="5" CornerRadius="5"/>
+                    <Border Width="45" Height="45" Background="LightGray" BorderBrush="Gray" BorderThickness="1" Margin="5" CornerRadius="5"/>
+                    <Border Width="45" Height="45" Background="LightGray" BorderBrush="Gray" BorderThickness="1" Margin="5" CornerRadius="5"/>
+                    <Border Width="45" Height="45" Background="LightGray" BorderBrush="Gray" BorderThickness="1" Margin="5" CornerRadius="5"/>
+                </StackPanel>
+
+                <Border Grid.Row="1" Background="White" CornerRadius="10" Padding="15" VerticalAlignment="Top">
+                    <UniformGrid Columns="9">
+                        <Button Content="A" Margin="3" Height="35"/>
+                        <Button Content="B" Margin="3"/>
+                        <Button Content="C" Margin="3"/>
+                        <Button Content="D" Margin="3"/>
+                        <Button Content="E" Margin="3"/>
+                        <Button Content="F" Margin="3"/>
+                        <Button Content="G" Margin="3"/>
+                        <Button Content="H" Margin="3"/>
+                        <Button Content="I" Margin="3"/>
+                        <Button Content="J" Margin="3"/>
+                        <Button Content="K" Margin="3"/>
+                        <Button Content="L" Margin="3"/>
+                        <Button Content="M" Margin="3"/>
+                        <Button Content="N" Margin="3"/>
+                        <Button Content="O" Margin="3"/>
+                        <Button Content="P" Margin="3"/>
+                        <Button Content="Q" Margin="3"/>
+                        <Button Content="R" Margin="3"/>
+                        <Button Content="S" Margin="3"/>
+                        <Button Content="T" Margin="3"/>
+                        <Button Content="U" Margin="3"/>
+                        <Button Content="V" Margin="3"/>
+                        <Button Content="W" Margin="3"/>
+                        <Button Content="X" Margin="3"/>
+                        <Button Content="Y" Margin="3"/>
+                        <Button Content="Z" Margin="3"/>
+                    </UniformGrid>
+                </Border>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

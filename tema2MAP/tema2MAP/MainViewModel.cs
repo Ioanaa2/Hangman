@@ -13,6 +13,20 @@ namespace tema2MAP
 
         public ObservableCollection<string> Users { get; set; }
 
+        private string _selectedCategory = "All Categories";
+        public List<string> Categories { get; set; } = new()
+        {
+            "All Categories",
+            "Animals",
+            "Fruits",
+            "Countries"
+        };
+        public string SelectedCategory
+        {
+            get => _selectedCategory;
+            set { _selectedCategory = value; OnPropertyChanged(); }
+        }
+
         public string? SelectedUser
         {
             get => _selectedUser;
@@ -117,7 +131,11 @@ namespace tema2MAP
 
         private void StartGame()
         {
-            // Hangman logic
+            if (SelectedUser == null)
+                return;
+
+            GameWindow window = new GameWindow(SelectedUser, "All categories");
+            window.ShowDialog();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

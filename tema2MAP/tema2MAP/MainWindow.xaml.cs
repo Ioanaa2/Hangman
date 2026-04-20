@@ -11,7 +11,7 @@ namespace tema2MAP
 
         private void Play_Click(object sender, RoutedEventArgs e)
         {
-            PlayWindow playWindow = new PlayWindow();
+            GameWindow playWindow = new GameWindow();
             playWindow.Show();
         }
     }

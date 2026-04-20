@@ -23,5 +23,29 @@ namespace tema2MAP
         {
             InitializeComponent();
         }
+        public GameWindow(string playerName, string category)
+        {
+            InitializeComponent();
+            DataContext = new GameViewModel(playerName, category);
+        }
+        private void Category_Click(object sender, RoutedEventArgs e)
+        {
+
+            MenuItem clickedItem = sender as MenuItem;
+
+            MenuItem parent = clickedItem.Parent as MenuItem;
+
+            foreach (MenuItem item in parent.Items)
+            {
+                item.IsChecked = (item == clickedItem);
+            }
+
+            var viewModel = this.DataContext as MainViewModel;
+            if (viewModel != null)
+            {
+                string categorie = clickedItem.Header.ToString();
+
+            }
+        }
     }
 }
