@@ -13,7 +13,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- MENIU -->
         <Menu Grid.Row="0" Background="White">
             <MenuItem Header="File">
                 <MenuItem Header="New Game"
@@ -53,13 +52,13 @@
             </MenuItem>
         </Menu>
 
-        <!-- CONȚINUT -->
         <Grid Grid.Row="1" Margin="20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="250"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
+            <!-- STANGA -->
             <StackPanel Grid.Column="0">
 
                 <TextBlock Text="{Binding PlayerName}"
@@ -69,36 +68,69 @@
 
                 <TextBlock Text="{Binding SelectedCategory}"
                            FontSize="18"
+                           Margin="0,0,0,10"/>
+
+                <TextBlock Text="{Binding TimeLeft, StringFormat='Timp ramas: {0}s'}"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Foreground="Red"
                            Margin="0,0,0,15"/>
 
-                <Border Background="White" BorderBrush="Black" BorderThickness="3" Height="220">
-                    <Grid>
-                        <Image Source="{Binding HangmanImage}" Stretch="Uniform"/>
-                    </Grid>
+                <Border Background="White"
+                        BorderBrush="Black"
+                        BorderThickness="3"
+                        Height="220">
+
+                    <Canvas Width="200" Height="200">
+
+                        <Line X1="20" Y1="180" X2="180" Y2="180" Stroke="Black" StrokeThickness="4"/>
+                        <Line X1="50" Y1="180" X2="50" Y2="20" Stroke="Black" StrokeThickness="4"/>
+                        <Line X1="50" Y1="20" X2="140" Y2="20" Stroke="Black" StrokeThickness="4"/>
+                        <Line X1="140" Y1="20" X2="140" Y2="40" Stroke="Black" StrokeThickness="3"/>
+
+                        <Ellipse Width="30" Height="30"
+                                 Canvas.Left="125" Canvas.Top="40"
+                                 Stroke="Black" StrokeThickness="3"
+                                 Visibility="{Binding HeadVisibility}"/>
+
+                        <Line X1="140" Y1="70" X2="140" Y2="120"
+                              Stroke="Black" StrokeThickness="3"
+                              Visibility="{Binding BodyVisibility}"/>
+
+                        <Line X1="140" Y1="85" X2="110" Y2="105"
+                              Stroke="Black" StrokeThickness="3"
+                              Visibility="{Binding LeftArmVisibility}"/>
+
+                        <Line X1="140" Y1="85" X2="170" Y2="105"
+                              Stroke="Black" StrokeThickness="3"
+                              Visibility="{Binding RightArmVisibility}"/>
+
+                        <Line X1="140" Y1="120" X2="115" Y2="150"
+                              Stroke="Black" StrokeThickness="3"
+                              Visibility="{Binding LeftLegVisibility}"/>
+
+                        <Line X1="140" Y1="120" X2="165" Y2="150"
+                              Stroke="Black" StrokeThickness="3"
+                              Visibility="{Binding RightLegVisibility}"/>
+
+                    </Canvas>
                 </Border>
 
-                <TextBlock Text="{Binding DisplayWord}"
-                           FontSize="24"
-                           FontWeight="Bold"
-                           Background="Green" Foreground="AliceBlue"
-                           Margin="0,30,0,0"/>
-
-                <TextBlock Text="{Binding LivesDisplay}"
-                           FontSize="20"
-                           Margin="0,10,0,0"/>
             </StackPanel>
 
+            <!-- DREAPTA -->
             <Grid Grid.Column="1" Margin="30,0,0,0">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- VIEȚI VIZUALE (X BOXES) -->
+                <!-- VIEȚI -->
                 <StackPanel Grid.Row="0"
                             Orientation="Horizontal"
                             HorizontalAlignment="Center"
-                            Margin="0,20,0,40">
+                            Margin="0,20,0,20">
 
                     <ItemsControl ItemsSource="{Binding LivesBoxes}">
                         <ItemsControl.ItemsPanel>
@@ -109,7 +141,8 @@
 
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Width="45" Height="45"
+                                <Border Width="45"
+                                        Height="45"
                                         Background="LightGray"
                                         BorderBrush="Gray"
                                         BorderThickness="1"
@@ -126,12 +159,11 @@
 
                 </StackPanel>
 
-                <!-- TASTATURĂ -->
+                <!-- TASTATURA -->
                 <Border Grid.Row="1"
                         Background="White"
                         CornerRadius="10"
-                        Padding="15"
-                        VerticalAlignment="Top">
+                        Padding="15">
 
                     <ItemsControl ItemsSource="{Binding Letters}">
                         <ItemsControl.ItemsPanel>
@@ -153,7 +185,25 @@
                     </ItemsControl>
 
                 </Border>
+
+                <!-- CUVANT -->
+                <Border Grid.Row="2"
+                        Background="Black"
+                        BorderBrush="Lime"
+                        BorderThickness="2"
+                        Padding="12"
+                        Margin="0,20,0,0"
+                        HorizontalAlignment="Center">
+
+                    <TextBlock Text="{Binding DisplayWord}"
+                               FontSize="32"
+                               FontWeight="Bold"
+                               Foreground="Lime"
+                               HorizontalAlignment="Center"/>
+                </Border>
+
             </Grid>
+
         </Grid>
     </Grid>
 </Window>

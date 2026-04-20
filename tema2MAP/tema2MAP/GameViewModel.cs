@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace tema2MAP
 {
@@ -14,56 +15,21 @@ namespace tema2MAP
         private string _word = "";
         private string _displayWord = "";
         private int _wrongGuesses;
-        public ICommand ChangeCategoryCommand { get; }
-       
+        private string _hangmanImage = "";
+
+        private int _timeLeft;
+        private DispatcherTimer _timer;
 
         private HashSet<char> _usedLetters = new();
 
         public string PlayerName { get; set; }
         public string SelectedCategory { get; set; }
 
-        public ObservableCollection<LetterButton> Letters { get; set; }
-
-        public string DisplayWord
-        {
-            get => _displayWord;
-            set { _displayWord = value; OnPropertyChanged(); }
-        }
-
-        public int WrongGuesses
-        {
-            get => _wrongGuesses;
-            set
-            {
-                _wrongGuesses = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(LivesDisplay));
-                UpdateImage();
-            }
-        }
-
-        public string LivesDisplay => new string('X', WrongGuesses);
-
-        private string _hangmanImage = "";
-        public string HangmanImage
-        {
-            get => _hangmanImage;
-            set { _hangmanImage = value; OnPropertyChanged(); }
-        }
+        public ObservableCollection<LetterButton> Letters { get; set; } = new();
 
         public ICommand GuessCommand { get; }
         public ICommand NewGameCommand { get; }
-
-        private readonly string[] _images =
-        {
-            "/Images/0.png",
-            "/Images/1.png",
-            "/Images/2.png",
-            "/Images/3.png",
-            "/Images/4.png",
-            "/Images/5.png",
-            "/Images/6.png"
-        };
+        public ICommand ChangeCategoryCommand { get; }
 
         public GameViewModel(string playerName, string category)
         {
@@ -85,6 +51,74 @@ namespace tema2MAP
             InitLetters();
             StartNewGame();
         }
+
+        public string DisplayWord
+        {
+            get => _displayWord;
+            set { _displayWord = value; OnPropertyChanged(); }
+        }
+
+        public int WrongGuesses
+        {
+            get => _wrongGuesses;
+            set
+            {
+                _wrongGuesses = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(LivesDisplay));
+
+                OnPropertyChanged(nameof(HeadVisibility));
+                OnPropertyChanged(nameof(BodyVisibility));
+                OnPropertyChanged(nameof(LeftArmVisibility));
+                OnPropertyChanged(nameof(RightArmVisibility));
+                OnPropertyChanged(nameof(LeftLegVisibility));
+                OnPropertyChanged(nameof(RightLegVisibility));
+
+                UpdateImage();
+            }
+        }
+
+        public string LivesDisplay => new string('X', WrongGuesses);
+
+        public string HangmanImage
+        {
+            get => _hangmanImage;
+            set { _hangmanImage = value; OnPropertyChanged(); }
+        }
+
+        public int TimeLeft
+        {
+            get => _timeLeft;
+            set
+            {
+                _timeLeft = value;
+                OnPropertyChanged();
+
+                if (_timeLeft <= 0)
+                {
+                    _timer.Stop();
+                    MessageBox.Show($"Ai pierdut! Cuvantul era: {_word}");
+                }
+            }
+        }
+
+        public Visibility HeadVisibility => WrongGuesses >= 1 ? Visibility.Visible : Visibility.Hidden;
+        public Visibility BodyVisibility => WrongGuesses >= 2 ? Visibility.Visible : Visibility.Hidden;
+        public Visibility LeftArmVisibility => WrongGuesses >= 3 ? Visibility.Visible : Visibility.Hidden;
+        public Visibility RightArmVisibility => WrongGuesses >= 4 ? Visibility.Visible : Visibility.Hidden;
+        public Visibility LeftLegVisibility => WrongGuesses >= 5 ? Visibility.Visible : Visibility.Hidden;
+        public Visibility RightLegVisibility => WrongGuesses >= 6 ? Visibility.Visible : Visibility.Hidden;
+
+        private readonly string[] _images =
+        {
+            "/Images/0.png",
+            "/Images/1.png",
+            "/Images/2.png",
+            "/Images/3.png",
+            "/Images/4.png",
+            "/Images/5.png",
+            "/Images/6.png"
+        };
 
         private void InitLetters()
         {
@@ -111,6 +145,31 @@ namespace tema2MAP
 
             foreach (var l in Letters)
                 l.IsEnabled = true;
+
+            StartTimer();
+        }
+
+        private void StartTimer()
+        {
+            _timer?.Stop();
+
+            TimeLeft = 30;
+
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(1);
+
+            _timer.Tick += (s, e) =>
+            {
+                TimeLeft--;
+
+                if (TimeLeft <= 0)
+                {
+                    _timer.Stop();
+                    MessageBox.Show($"Ai pierdut! Cuvantul era: {_word}");
+                }
+            };
+
+            _timer.Start();
         }
 
         private void Guess(object? param)
@@ -131,14 +190,20 @@ namespace tema2MAP
                 UpdateDisplayWord(letter);
 
                 if (!DisplayWord.Contains("_"))
+                {
+                    _timer.Stop();
                     MessageBox.Show("Ai castigat!");
+                }
             }
             else
             {
                 WrongGuesses++;
 
                 if (WrongGuesses >= _images.Length - 1)
+                {
+                    _timer.Stop();
                     MessageBox.Show($"Ai pierdut! Cuvantul era: {_word}");
+                }
             }
         }
 
