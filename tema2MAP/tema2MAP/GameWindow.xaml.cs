@@ -1,50 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace tema2MAP
 {
-    /// <summary>
-    /// Interaction logic for GameWindow.xaml
-    /// </summary>
     public partial class GameWindow : Window
     {
+        public GameWindow(string player, string category)
+        {
+            InitializeComponent();
+            DataContext = new GameViewModel(player, category);
+        }
+
         public GameWindow()
         {
             InitializeComponent();
         }
-        public GameWindow(string playerName, string category)
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            InitializeComponent();
-            DataContext = new GameViewModel(playerName, category);
-        }
-        private void Category_Click(object sender, RoutedEventArgs e)
-        {
-
-            MenuItem clickedItem = sender as MenuItem;
-
-            MenuItem parent = clickedItem.Parent as MenuItem;
-
-            foreach (MenuItem item in parent.Items)
+            if (DataContext is GameViewModel vm)
             {
-                item.IsChecked = (item == clickedItem);
-            }
+                if (e.Key >= Key.A && e.Key <= Key.Z)
+                {
+                    char c = (char)('A' + (e.Key - Key.A));
 
-            var viewModel = this.DataContext as MainViewModel;
-            if (viewModel != null)
-            {
-                string categorie = clickedItem.Header.ToString();
+                    var letter = vm.Letters.FirstOrDefault(l => l.Letter == c.ToString());
 
+                    if (letter != null && letter.IsEnabled)
+                        vm.GuessCommand.Execute(letter);
+                }
             }
         }
     }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 
 namespace tema2MAP
@@ -11,22 +13,59 @@ namespace tema2MAP
     {
         private string _word = "";
         private string _displayWord = "";
-        private int _lives = 6;
+        private int _wrongGuesses;
+        public ICommand ChangeCategoryCommand { get; }
+       
 
         private HashSet<char> _usedLetters = new();
 
-        private string _playerName = "";
+        public string PlayerName { get; set; }
+        public string SelectedCategory { get; set; }
 
-        public string PlayerName
+        public ObservableCollection<LetterButton> Letters { get; set; }
+
+        public string DisplayWord
         {
-            get => _playerName;
+            get => _displayWord;
+            set { _displayWord = value; OnPropertyChanged(); }
+        }
+
+        public int WrongGuesses
+        {
+            get => _wrongGuesses;
             set
             {
-                _playerName = value;
+                _wrongGuesses = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(LivesDisplay));
+                UpdateImage();
             }
         }
-        public GameViewModel(string playerName, string category = "All categories")
+
+        public string LivesDisplay => new string('X', WrongGuesses);
+
+        private string _hangmanImage = "";
+        public string HangmanImage
+        {
+            get => _hangmanImage;
+            set { _hangmanImage = value; OnPropertyChanged(); }
+        }
+
+        public ICommand GuessCommand { get; }
+        public ICommand NewGameCommand { get; }
+
+        private readonly string[] _images =
+        {
+            "/Images/0.png",
+            "/Images/1.png",
+            "/Images/2.png",
+            "/Images/3.png",
+            "/Images/4.png",
+            "/Images/5.png",
+            "/Images/6.png"
+        };
+
+        public GameViewModel(string playerName, string category)
         {
             PlayerName = playerName;
             SelectedCategory = category;
@@ -34,59 +73,53 @@ namespace tema2MAP
             GuessCommand = new RelayCommand(param => Guess(param));
             NewGameCommand = new RelayCommand(_ => StartNewGame());
 
+            ChangeCategoryCommand = new RelayCommand(param =>
+            {
+                if (param == null) return;
+
+                SelectedCategory = param.ToString()!;
+                OnPropertyChanged(nameof(SelectedCategory));
+                StartNewGame();
+            });
+
+            InitLetters();
             StartNewGame();
         }
-        public string DisplayWord
+
+        private void InitLetters()
         {
-            get => _displayWord;
-            set { _displayWord = value; OnPropertyChanged(); }
-        }
-
-        public int Lives
-        {
-            get => _lives;
-            set { _lives = value; OnPropertyChanged(); }
-        }
-
-        public string SelectedCategory { get; set; }
-
-        public ICommand GuessCommand { get; }
-        public ICommand NewGameCommand { get; }
-
-        public GameViewModel(string category = "All categories")
-        {
-            SelectedCategory = category;
-
-            GuessCommand = new RelayCommand(param => Guess(param));
-            NewGameCommand = new RelayCommand(_ => StartNewGame());
-
-            StartNewGame();
+            Letters = new ObservableCollection<LetterButton>(
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                .Select(c => new LetterButton { Letter = c.ToString() })
+            );
         }
 
         private void StartNewGame()
         {
             var data = WordProvider.LoadWords();
 
-            List<string> words;
-
-            if (SelectedCategory == "All categories")
-                words = data.Values.SelectMany(x => x).ToList();
-            else
-                words = data[SelectedCategory];
+            List<string> words = SelectedCategory == "All categories"
+                ? data.Values.SelectMany(x => x).ToList()
+                : data[SelectedCategory];
 
             _word = WordProvider.GetRandomWord(words).ToLower();
 
-            _usedLetters.Clear();
-            Lives = 6;
-
             DisplayWord = string.Join(" ", _word.Select(_ => "_"));
+
+            _usedLetters.Clear();
+            WrongGuesses = 0;
+
+            foreach (var l in Letters)
+                l.IsEnabled = true;
         }
 
         private void Guess(object? param)
         {
-            if (param == null) return;
+            if (param is not LetterButton letterBtn) return;
 
-            char letter = param.ToString()!.ToLower()[0];
+            char letter = letterBtn.Letter.ToLower()[0];
+
+            letterBtn.IsEnabled = false;
 
             if (_usedLetters.Contains(letter))
                 return;
@@ -98,18 +131,14 @@ namespace tema2MAP
                 UpdateDisplayWord(letter);
 
                 if (!DisplayWord.Contains("_"))
-                {
-                    System.Windows.MessageBox.Show("Ai castigat!");
-                }
+                    MessageBox.Show("Ai castigat!");
             }
             else
             {
-                Lives--;
+                WrongGuesses++;
 
-                if (Lives == 0)
-                {
-                    System.Windows.MessageBox.Show($"Ai pierdut! Cuvantul era: {_word}");
-                }
+                if (WrongGuesses >= _images.Length - 1)
+                    MessageBox.Show($"Ai pierdut! Cuvantul era: {_word}");
             }
         }
 
@@ -124,6 +153,11 @@ namespace tema2MAP
             }
 
             DisplayWord = string.Join(" ", display);
+        }
+
+        private void UpdateImage()
+        {
+            HangmanImage = _images[WrongGuesses];
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
