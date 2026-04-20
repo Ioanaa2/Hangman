@@ -32,6 +32,23 @@ namespace tema2MAP
                 }
             }
         }
+
+        private void SaveGame_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is GameViewModel vm)
+            {
+                vm.SaveGame();
+            }
+        }
+
+        private void LoadGame_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is GameViewModel vm)
+            {
+                vm.LoadGame();
+            }
+        }
+
         private void OpenStatistics_Click(object sender, RoutedEventArgs e)
         {
             StatisticsWindow statsWin = new StatisticsWindow();

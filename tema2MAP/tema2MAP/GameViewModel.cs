@@ -32,12 +32,11 @@ namespace tema2MAP
 
         public GameViewModel(string playerName, string category)
         {
-            // Inițializări pentru a evita erorile de tip "Non-nullable property"
             PlayerName = playerName;
             SelectedCategory = category;
             _word = "";
             _displayWord = "";
-            _timer = new DispatcherTimer(); // Inițializare instanță timer
+            _timer = new DispatcherTimer();
 
             GuessCommand = new RelayCommand(param => Guess(param));
             NewGameCommand = new RelayCommand(_ => StartNewGame());
@@ -99,7 +98,7 @@ namespace tema2MAP
                 if (_timeLeft <= 0)
                 {
                     _timer.Stop();
-                    UpdateStatistics(false); // Adăugat: Contorizare înfrângere timp expirat
+                    UpdateStatistics(false); 
                     MessageBox.Show($"Ai pierdut! Timpul a expirat. Cuvantul era: {_word}");
                     StartNewGame();
                 }
@@ -171,7 +170,7 @@ namespace tema2MAP
 
                     if (Streak >= 3)
                     {
-                        UpdateStatistics(true); // Adăugat: Salvare victorie finală
+                        UpdateStatistics(true);
                         MessageBox.Show("AI CASTIGAT JOCUL (3 niveluri consecutive)!");
                         Streak = 0;
                         Level = 1;
@@ -189,7 +188,7 @@ namespace tema2MAP
                 if (WrongGuesses >= 6)
                 {
                     _timer.Stop();
-                    UpdateStatistics(false); // Adăugat: Salvare înfrângere
+                    UpdateStatistics(false); 
                     MessageBox.Show($"Ai pierdut! Cuvantul era: {_word}");
                     Streak = 0;
                     Level = 1;
@@ -210,7 +209,6 @@ namespace tema2MAP
 
         private void UpdateImage() => HangmanImage = (WrongGuesses < _images.Length) ? _images[WrongGuesses] : _images.Last();
 
-        // --- Logica de Statistici ---
 
         private void UpdateStatistics(bool isWin)
         {
@@ -253,5 +251,80 @@ namespace tema2MAP
         private int _streak = 0;
         public int Level { get => _level; set { _level = value; OnPropertyChanged(); } }
         public int Streak { get => _streak; set { _streak = value; OnPropertyChanged(); } }
+
+        public void SaveGame()
+        {
+            var state = new GameState
+            {
+                PlayerName = this.PlayerName,
+                SelectedCategory = this.SelectedCategory,
+                Word = this._word,
+                UsedLetters = _usedLetters.Select(c => c.ToString()).ToList(),
+                WrongGuesses = this.WrongGuesses,
+                TimeLeft = this.TimeLeft,
+                Level = this.Level,
+                Streak = this.Streak
+            };
+
+            string json = JsonSerializer.Serialize(state, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText("savegame.json", json);
+            MessageBox.Show("Joc salvat cu succes!");
+        }
+
+        public void LoadGame()
+        {
+            if (!File.Exists("savegame.json"))
+            {
+                MessageBox.Show("Nu există niciun joc salvat!");
+                return;
+            }
+
+            try
+            {
+                string json = File.ReadAllText("savegame.json");
+                var state = JsonSerializer.Deserialize<GameState>(json);
+
+                if (state != null)
+                {
+                    this._word = state.Word;
+                    this.WrongGuesses = state.WrongGuesses;
+                    this.TimeLeft = state.TimeLeft;
+                    this.Level = state.Level;
+                    this.Streak = state.Streak;
+
+                    _usedLetters.Clear();
+                    foreach (var s in state.UsedLetters) _usedLetters.Add(s[0]);
+
+                    foreach (var btn in Letters)
+                    {
+                        btn.IsEnabled = !_usedLetters.Contains(btn.Letter.ToLower()[0]);
+                    }
+
+                    UpdateDisplayAfterLoad();
+                    StartTimer(this.TimeLeft);
+
+                    MessageBox.Show("Joc încărcat!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Eroare la încărcare: " + ex.Message);
+            }
+        }
+
+        private void UpdateDisplayAfterLoad()
+        {
+            var display = _word.Select(c => _usedLetters.Contains(c) ? c.ToString() : "_").ToArray();
+            DisplayWord = string.Join(" ", display);
+        }
+
+        private void StartTimer(int customTime = 30)
+        {
+            _timer.Stop();
+            TimeLeft = customTime;
+            _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            _timer.Tick += (s, e) => TimeLeft--;
+            _timer.Start();
+        }
     }
 }
