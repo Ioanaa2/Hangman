@@ -45,6 +45,10 @@ namespace tema2MAP
 
                 SelectedCategory = param.ToString()!;
                 OnPropertyChanged(nameof(SelectedCategory));
+
+                Level = 1;
+                Streak = 0;
+
                 StartNewGame();
             });
 
@@ -146,7 +150,10 @@ namespace tema2MAP
             foreach (var l in Letters)
                 l.IsEnabled = true;
 
+            TimeLeft = 30;
             StartTimer();
+
+            Level = 1;
         }
 
         private void StartTimer()
@@ -192,7 +199,21 @@ namespace tema2MAP
                 if (!DisplayWord.Contains("_"))
                 {
                     _timer.Stop();
-                    MessageBox.Show("Ai castigat!");
+
+                    Streak++;
+                    Level++;
+
+                    if (Streak >= 3)
+                    {
+                        MessageBox.Show("AI CASTIGAT JOCUL (3 niveluri consecutive)!");
+                        Streak = 0;
+                        Level = 1;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Nivel castigat!");
+                        StartNewGame();
+                    }
                 }
             }
             else
@@ -202,7 +223,11 @@ namespace tema2MAP
                 if (WrongGuesses >= _images.Length - 1)
                 {
                     _timer.Stop();
+
                     MessageBox.Show($"Ai pierdut! Cuvantul era: {_word}");
+
+                    Streak = 0;
+                    Level = 1;
                 }
             }
         }
@@ -230,6 +255,20 @@ namespace tema2MAP
         private void OnPropertyChanged([CallerMemberName] string? name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        private int _level;
+        private int _streak;
+        public int Level
+        {
+            get => _level;
+            set { _level = value; OnPropertyChanged(); }
+        }
+
+        public int Streak
+        {
+            get => _streak;
+            set { _streak = value; OnPropertyChanged(); }
         }
     }
 }
