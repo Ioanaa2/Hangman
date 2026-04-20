@@ -58,7 +58,6 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- STANGA -->
             <StackPanel Grid.Column="0">
 
                 <TextBlock Text="{Binding PlayerName}"
@@ -74,7 +73,7 @@
                            FontSize="22"
                            FontWeight="Bold"
                            Foreground="Red"
-                           Margin="0,0,0,15"/>
+                           Margin="0,0,0,10"/>
 
                 <Border Background="White"
                         BorderBrush="Black"
@@ -116,9 +115,19 @@
                     </Canvas>
                 </Border>
 
+                <TextBlock Text="{Binding DisplayWord}"
+                           FontSize="32"
+                           FontWeight="Bold"
+                           Foreground="Lime"
+                           HorizontalAlignment="Center"
+                           Margin="0,15,0,5"/>
+
+                <TextBlock Text="{Binding LivesDisplay}"
+                           FontSize="20"
+                           Margin="0,10,0,0"/>
+
             </StackPanel>
 
-            <!-- DREAPTA -->
             <Grid Grid.Column="1" Margin="30,0,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -126,11 +135,10 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- VIEȚI -->
                 <StackPanel Grid.Row="0"
                             Orientation="Horizontal"
                             HorizontalAlignment="Center"
-                            Margin="0,20,0,20">
+                            Margin="0,20,0,10">
 
                     <ItemsControl ItemsSource="{Binding LivesBoxes}">
                         <ItemsControl.ItemsPanel>
@@ -159,8 +167,23 @@
 
                 </StackPanel>
 
-                <!-- TASTATURA -->
-                <Border Grid.Row="1"
+                <StackPanel Grid.Row="1"
+                            Orientation="Vertical"
+                            HorizontalAlignment="Center"
+                            Margin="0,0,0,10">
+
+                    <TextBlock Text="{Binding Level, StringFormat='Nivel: {0}'}"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"/>
+
+                    <TextBlock Text="{Binding Streak, StringFormat='Streak: {0}/3'}"
+                               FontSize="18"
+                               Foreground="Blue"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Grid.Row="2"
                         Background="White"
                         CornerRadius="10"
                         Padding="15">
@@ -186,24 +209,7 @@
 
                 </Border>
 
-                <!-- CUVANT -->
-                <Border Grid.Row="2"
-                        Background="Black"
-                        BorderBrush="Lime"
-                        BorderThickness="2"
-                        Padding="12"
-                        Margin="0,20,0,0"
-                        HorizontalAlignment="Center">
-
-                    <TextBlock Text="{Binding DisplayWord}"
-                               FontSize="32"
-                               FontWeight="Bold"
-                               Foreground="Lime"
-                               HorizontalAlignment="Center"/>
-                </Border>
-
             </Grid>
-
         </Grid>
     </Grid>
 </Window>
