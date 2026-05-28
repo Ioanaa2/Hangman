@@ -54,5 +54,11 @@ namespace tema2MAP
             StatisticsWindow statsWin = new StatisticsWindow();
             statsWin.ShowDialog();
         }
+
+        private void Help_Click(object sender, RoutedEventArgs e)
+        {
+            HelpWindow help= new HelpWindow();
+            help.ShowDialog();
+        }
     }
 }

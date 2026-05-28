@@ -54,6 +54,7 @@
                           Command="{Binding ChangeCategoryCommand}"
                           CommandParameter="Rivers"/>
             </MenuItem>
+            <MenuItem Header="Help" Click="Help_Click"/>
         </Menu>
 
         <Grid Grid.Row="1" Margin="20">
